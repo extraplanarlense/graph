@@ -6,11 +6,11 @@ class Graph:
         raise NotImplementedError
 
     def nodes(self):
-        """Make an iterable of all nodes in the graph."""
+        """Make a set of all nodes in the graph."""
         raise NotImplementedError
 
     def edges(self):
-        """Make an iterable of all edges in the graph."""
+        """Make a set of all edges in the graph."""
         raise NotImplementedError
 
     def add_node(self, properties=None, **kwargs):
@@ -50,15 +50,15 @@ class Node:
         raise NotImplementedError
 
     def inbound(self):
-        """Make an iterable of all edges that end at the node."""
+        """Make a set of all edges that end at the node."""
         raise NotImplementedError
 
     def outbound(self):
-        """Make an iterable of all edges that start at the node."""
+        """Make a set of all edges that start at the node."""
         raise NotImplementedError
 
     def edges(self):
-        """Make an iterable of all edges that start or end at the node."""
+        """Make a set of all edges that start or end at the node."""
         raise NotImplementedError
 
 

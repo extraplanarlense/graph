@@ -1,3 +1,5 @@
+from collections import Set
+
 from graph import Edge, Node, Graph
 
 
@@ -12,21 +14,33 @@ class AbstractGraphTest:
         self.assertIsInstance(self.ab, Edge)
 
     def test_nodes(self):
-        self.assertSetEqual(set(self.graph.nodes()), set((self.a, self.b)))
+        self.assertIsInstance(self.graph.edges(), Set)
+        self.assertSetEqual(self.graph.nodes(), set((self.a, self.b)))
 
     def test_edges(self):
-        self.assertSetEqual(set(self.graph.edges()), set((self.ab,)))
+        self.assertIsInstance(self.graph.edges(), Set)
+        self.assertSetEqual(self.graph.edges(), set((self.ab,)))
 
     def test_inbound(self):
-        self.assertSetEqual(set(self.b.inbound()), set((self.ab,)))
+        self.assertIsInstance(self.a.inbound(), Set)
+        self.assertIsInstance(self.b.inbound(), Set)
+        self.assertSetEqual(self.b.inbound(), set((self.ab,)))
+        for item in self.a.inbound():
+            self.assertIsInstance(item, Edge)
 
     def test_outbound(self):
-        self.assertSetEqual(set(self.a.outbound()), set((self.ab,)))
+        self.assertIsInstance(self.a.outbound(), Set)
+        self.assertIsInstance(self.b.outbound(), Set)
+        self.assertSetEqual(self.a.outbound(), set((self.ab,)))
+        for item in self.a.outbound():
+            self.assertIsInstance(item, Edge)
 
     def test_source(self):
+        self.assertIsInstance(self.ab.target, Node)
         self.assertEqual(self.ab.source, self.a)
 
     def test_target(self):
+        self.assertIsInstance(self.ab.target, Node)
         self.assertEqual(self.ab.target, self.b)
 
     def test_add_node(self):
