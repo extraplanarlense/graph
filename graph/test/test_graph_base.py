@@ -18,10 +18,10 @@ class AbstractGraphTest:
         self.assertSetEqual(set(self.graph.edges()), set((self.ab,)))
 
     def test_inbound(self):
-        self.assertSetEqual(set(self.b.inbound()), set(self.ab))
+        self.assertSetEqual(set(self.b.inbound()), set((self.ab,)))
 
     def test_outbound(self):
-        self.assertSetEqual(set(self.a.outbound()), set(self.ab))
+        self.assertSetEqual(set(self.a.outbound()), set((self.ab,)))
 
     def test_source(self):
         self.assertEqual(self.ab.source, self.a)
@@ -41,8 +41,8 @@ class AbstractGraphTest:
     def test_add_edge(self):
         edge = self.graph.add_edge(self.b, self.a)
         self.assertIsInstance(edge, Edge)
-        self.assertEqual(edge.source, self.a)
-        self.assertEqual(edge.target, self.b)
+        self.assertEqual(edge.source, self.b)
+        self.assertEqual(edge.target, self.a)
         self.assertIn(edge, self.graph.edges())
         self.assertIn(edge, self.a.inbound())
         self.assertIn(edge, self.b.outbound())
