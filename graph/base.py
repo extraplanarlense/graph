@@ -13,8 +13,11 @@ class Graph:
         """Make an iterable of all edges in the graph."""
         raise NotImplementedError
 
-    def add_node(self):
+    def add_node(self, properties=None, **kwargs):
         """Add a node to the graph.
+
+        The new node can be assigned properties via the mapping *properties* or
+        keyword arguments.
 
         Returns the newly created node.
         """
@@ -24,8 +27,14 @@ class Graph:
         """Remove a given node from the graph."""
         raise NotImplementedError
 
-    def add_edge(self, source, target):
-        """Add an edge between two nodes."""
+    def add_edge(self, source, target, properties=None, **kwargs):
+        """Add an edge between two nodes.
+
+        The new edge can be assigned properties via the mapping *properties* or
+        keyword arguments.
+
+        Returns the newly created edge.
+        """
         raise NotImplementedError
 
     def remove_edge(self, edge):
