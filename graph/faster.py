@@ -100,7 +100,7 @@ class FasterNode(Node):
 
     def edges(self):
         """Make an iterable of all edges that start or end at the node."""
-        return chain(self._inbound, self._outbound)
+        return set(chain(self._inbound, self._outbound))
 
 
 class FasterEdge(Edge):
