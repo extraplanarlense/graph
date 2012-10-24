@@ -41,22 +41,21 @@ class SimpleGraph(Graph):
         id = node._id
 
         for edge_id in self._edges_inbound[id]:
+            source_id, _target_id = self._edges[edge_id]
+            self._edges_outbound[source_id].remove(edge_id)
             del self._edges[edge_id]
-        try:
-            del self._edges_inbound[id]
-        except KeyError:
-            pass
+        del self._edges_inbound[id]
 
         for edge_id in self._edges_outbound[id]:
             try:
                 # Might have been removed in first loop.
-                del self._edges[edge_id]
+                _source_id, target_id = self._edges[edge_id]
             except KeyError:
                 pass
-        try:
-            del self._edges_outbound[id]
-        except KeyError:
-            pass
+            else:
+                self._edges_inbound[target_id].remove(edge_id)
+                del self._edges[edge_id]
+        del self._edges_outbound[id]
 
         self._nodes.remove(id)
 
