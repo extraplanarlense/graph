@@ -2,7 +2,7 @@ import unittest
 
 from graph.simple import SimpleGraph
 
-from .test_graph_base import AbstractGraphTest
+from .test_base import AbstractGraphTest
 
 
 class SimpleGraphTest(AbstractGraphTest, unittest.TestCase):

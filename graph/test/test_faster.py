@@ -2,7 +2,7 @@ import unittest
 
 from graph.faster import FasterGraph
 
-from .test_graph_base import AbstractGraphTest
+from .test_base import AbstractGraphTest
 
 
 class FasterGraphTest(AbstractGraphTest, unittest.TestCase):
