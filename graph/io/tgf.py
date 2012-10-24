@@ -18,4 +18,3 @@ class TGFSerializer(GraphSerializer):
         for edge in graph.edges():
             yield (str(ids[edge.source]) + " " + str(ids[edge.target]) + " "
                    + str(edge.properties[self.edge_label]) + "\n")
-        yield "\n"
