@@ -51,6 +51,10 @@ class AbstractGraphTest:
     def test_remove_node(self):
         self.graph.remove_node(self.a)
         self.assertNotIn(self.a, self.graph.nodes())
+        self.assertNotIn(self.ab, self.graph.edges())
+        self.assertNotIn(self.ab, self.b.inbound())
+        self.assertSetEqual(self.graph.edges(), set())
+        self.assertSetEqual(self.graph.nodes(), set((self.b,)))
 
     def test_add_edge(self):
         edge = self.graph.add_edge(self.b, self.a)
