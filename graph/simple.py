@@ -1,5 +1,5 @@
 from collections import defaultdict
-import uuid, random
+import uuid
 import logging
 
 from . import Graph, Node, Edge
@@ -31,7 +31,7 @@ class SimpleGraph(Graph):
 
     def add_node(self, properties=None, **kwargs):
         while True:
-            newid = random.randrange(1000)
+            newid = uuid.uuid4()
             if newid not in self._nodes:
                 break
         self._nodes.add(newid)
@@ -63,7 +63,7 @@ class SimpleGraph(Graph):
         source_id = source._id
         target_id = target._id
         while True:
-            newid = random.randrange(1000)
+            newid = newid = uuid.uuid4()
             if newid not in self._edges:
                 break
         self._edges[newid] = source_id, target_id
