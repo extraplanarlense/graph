@@ -35,6 +35,13 @@ class SimpleGraph(Graph):
             if newid not in self._nodes:
                 break
         self._nodes.add(newid)
+        if properties:
+            props = properties.copy()
+        else:
+            props = dict()
+        props.update(kwargs)
+        if props:
+            self._node_properties[newid].update(props)
         return SimpleNode(self, newid)
 
     def remove_node(self, node):
@@ -58,6 +65,10 @@ class SimpleGraph(Graph):
         del self._edges_outbound[id]
 
         self._nodes.remove(id)
+        try:
+            del self._node_properties[id]
+        except KeyError:
+            pass
 
     def add_edge(self, source, target, properties=None, **kwargs):
         source_id = source._id
@@ -69,6 +80,15 @@ class SimpleGraph(Graph):
         self._edges[newid] = source_id, target_id
         self._edges_inbound[target_id].add(newid)
         self._edges_outbound[source_id].add(newid)
+
+        if properties:
+            props = properties.copy()
+        else:
+            props = dict()
+        props.update(kwargs)
+        if props:
+            self._edge_properties[newid].update(props)
+
         return SimpleEdge(self, newid)
 
     def remove_edge(self, edge):
@@ -77,6 +97,10 @@ class SimpleGraph(Graph):
         self._edges_inbound[target].remove(oldid)
         self._edges_outbound[source].remove(oldid)
         del self._edges[oldid]
+        try:
+            del self._edge_properties[id]
+        except KeyError:
+            pass
 
 
 class SimpleNode(Node):
@@ -88,7 +112,7 @@ class SimpleNode(Node):
     @property
     def properties(self):
         """Mapping of properties assigned to the node."""
-        return {}
+        return self._graph._node_properties[self._id]
 
     def inbound(self):
         """Make an iterable of all edges that end at the node."""
@@ -127,7 +151,7 @@ class SimpleEdge(Edge):
     @property
     def properties(self):
         """Mapping of properties assigned to the edge."""
-        return {}
+        return self._graph._edge_properties[self._id]
 
     @property
     def target(self):
