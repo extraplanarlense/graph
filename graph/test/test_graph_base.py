@@ -5,7 +5,7 @@ from graph import Edge, Node, Graph
 
 class AbstractGraphTest:
     """Setup must create a graph self.graph with two nodes self.a and self.b,
-    connected by an edge self.ab from a to b."""
+    connected by an loop self.ab from a to b."""
 
     def test_init(self):
         self.assertIsInstance(self.graph, Graph)
@@ -70,6 +70,25 @@ class AbstractGraphTest:
         self.assertNotIn(self.ab, self.graph.edges())
         self.assertNotIn(self.ab, self.a.outbound())
         self.assertNotIn(self.ab, self.b.inbound())
+
+    def test_add_edge_loop(self):
+        loop = self.graph.add_edge(self.a, self.a)
+        self.assertIsInstance(loop, Edge)
+        self.assertEqual(loop.source, self.a)
+        self.assertEqual(loop.target, self.a)
+        self.assertIn(loop, self.graph.edges())
+        self.assertIn(loop, self.a.inbound())
+        self.assertIn(loop, self.a.outbound())
+
+    def test_add_edge_duplicate(self):
+        dup = self.graph.add_edge(self.a, self.b)
+        self.assertIsInstance(dup, Edge)
+        self.assertEqual(dup.source, self.a)
+        self.assertEqual(dup.target, self.b)
+        self.assertIn(dup, self.graph.edges())
+        self.assertIn(dup, self.b.inbound())
+        self.assertIn(dup, self.a.outbound())
+        self.assertNotEqual(dup, self.ab)
 
     def test_graph_properties_mapping(self):
         self.assertIsInstance(self.graph.properties, Mapping)
