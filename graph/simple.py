@@ -47,21 +47,9 @@ class SimpleGraph(Graph):
     def remove_node(self, node):
         id = node._id
 
-        for edge_id in self._edges_inbound[id]:
-            source_id, _target_id = self._edges[edge_id]
-            self._edges_outbound[source_id].remove(edge_id)
-            del self._edges[edge_id]
+        for edge_id in (self._edges_inbound[id] | self._edges_outbound[id]):
+            self._remove_edge_by_id(edge_id)
         del self._edges_inbound[id]
-
-        for edge_id in self._edges_outbound[id]:
-            try:
-                # Might have been removed in first loop.
-                _source_id, target_id = self._edges[edge_id]
-            except KeyError:
-                pass
-            else:
-                self._edges_inbound[target_id].remove(edge_id)
-                del self._edges[edge_id]
         del self._edges_outbound[id]
 
         self._nodes.remove(id)
@@ -92,13 +80,17 @@ class SimpleGraph(Graph):
         return SimpleEdge(self, newid)
 
     def remove_edge(self, edge):
-        oldid = edge._id
-        source, target = self._edges[oldid]
-        self._edges_inbound[target].remove(oldid)
-        self._edges_outbound[source].remove(oldid)
-        del self._edges[oldid]
+        id = edge._id
+        self._remove_edge_by_id(id)
+
+    def _remove_edge_by_id(self, edge_id):
+        """Remove the edge_id with the given id."""
+        source, target = self._edges[edge_id]
+        self._edges_inbound[target].remove(edge_id)
+        self._edges_outbound[source].remove(edge_id)
+        del self._edges[edge_id]
         try:
-            del self._edge_properties[id]
+            del self._edge_properties[edge_id]
         except KeyError:
             pass
 
