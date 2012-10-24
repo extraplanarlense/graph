@@ -1,4 +1,4 @@
-from collections import Set
+from collections import Set, Mapping
 
 from graph import Edge, Node, Graph
 
@@ -70,3 +70,39 @@ class AbstractGraphTest:
         self.assertNotIn(self.ab, self.graph.edges())
         self.assertNotIn(self.ab, self.a.outbound())
         self.assertNotIn(self.ab, self.b.inbound())
+
+    def test_graph_properties_mapping(self):
+        self.assertIsInstance(self.graph.properties, Mapping)
+
+    def test_node_properties_mapping(self):
+        self.assertIsInstance(self.a.properties, Mapping)
+        self.assertIsInstance(self.b.properties, Mapping)
+
+    def test_edge_properties_mapping(self):
+        self.assertIsInstance(self.ab.properties, Mapping)
+
+    def test_graph_set_property(self):
+        self.graph.properties["foo"] = "bar"
+        self.assertEqual(self.graph.properties["foo"], "bar")
+
+    def test_node_set_property(self):
+        self.a.properties["foo"] = "bar"
+        self.assertEqual(self.a.properties["foo"], "bar")
+
+    def test_edge_set_property(self):
+        self.ab.properties["foo"] = "bar"
+        self.assertEqual(self.ab.properties["foo"], "bar")
+
+    def test_add_node_with_properties(self):
+        c = self.graph.add_node({"foo": "bar"}, bar="foo")
+        self.assertEqual(c.properties["foo"], "bar")
+        self.assertEqual(c.properties["bar"], "foo")
+        self.assertSetEqual(set(c.properties.items()),
+                            set({"foo": "bar", "bar": "foo"}.items()))
+
+    def test_add_edge_with_properties(self):
+        c = self.graph.add_edge(self.b, self.a, {"foo": "bar"}, bar="foo")
+        self.assertEqual(c.properties["foo"], "bar")
+        self.assertEqual(c.properties["bar"], "foo")
+        self.assertSetEqual(set(c.properties.items()),
+                            set({"foo": "bar", "bar": "foo"}.items()))
