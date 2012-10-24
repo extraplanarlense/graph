@@ -35,6 +35,13 @@ class AbstractGraphTest:
         for item in self.a.outbound():
             self.assertIsInstance(item, Edge)
 
+    def test_node_edges(self):
+        self.assertIsInstance(self.a.edges(), Set)
+        self.assertIn(self.ab, self.a.edges())
+        self.assertIn(self.ab, self.b.edges())
+        self.assertSetEqual(self.a.edges(), self.b.edges())
+        self.assertSetEqual(self.a.edges(), set((self.ab, )))
+
     def test_source(self):
         self.assertIsInstance(self.ab.target, Node)
         self.assertEqual(self.ab.source, self.a)

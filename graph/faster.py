@@ -1,21 +1,21 @@
 from . import Graph, Edge, Node
 import string
 import random
+import uuid
 from itertools import chain
 
 class FasterGraph(Graph):
 
-    def id_generator(self, size=6, chars=string.ascii_uppercase + string.digits):
-        return ''.join(random.choice(chars) for x in range(size))
 
     @property
     def properties(self):
         """Mapping of properties assigned to the graph."""
-        raise NotImplementedError
+        return self._properties
 
     def __init__(self):
         self._nodes = {}
         self._edges = {}
+        self._properties = {}
 
     def nodes(self):
         """Make an iterable of all nodes in the graph."""
@@ -29,29 +29,35 @@ class FasterGraph(Graph):
         """
         Returns the newly created node.
         """
-        if properties is None:
-            while True:
-                random_name = self.id_generator()
-                if random_name not in self._nodes:
-                    break
-            new_node = FasterNode(properties={'name': random_name}, **kwargs)
-            self._nodes[random_name] = new_node
-        else:
-            new_node = FasterNode(properties, **kwargs)
-            self._nodes[properties['name']] = new_node
+        while True:
+            random_id = uuid.uuid4()
+            if random_id not in self._nodes:
+                break
+        new_node = FasterNode(random_id, properties, **kwargs)
+        self._nodes[random_id] = new_node
         return new_node
 
     def remove_node(self, node):
         """Remove a given node from the graph."""
         if node in self.nodes():
-            del self._nodes[node._properties['name']]
+            for inedge in node._inbound:
+                print('a')
+                self.remove_edge(inedge)
+            for outedge in node._outbound:
+                print('b')
+                self.remove_edge(outedge)
+            del self._nodes[node.id]
         else:
             raise RuntimeError
 
     def add_edge(self, source, target, properties=None, **kwargs):
         """Add an edge between two nodes."""
-        new_edge = FasterEdge(source, target, properties={'name': source._properties['name'] + '-' + target._properties['name']})
-        self._edges[source._properties['name'] + '-' + target._properties['name']] = new_edge
+        while True:
+                random_id = uuid.uuid4()
+                if random_id not in self._nodes:
+                    break
+        new_edge = FasterEdge(random_id, source, target, properties, **kwargs)
+        self._edges[random_id] = new_edge
         source._outbound.append(new_edge)
         target._inbound.append(new_edge)
         return new_edge
@@ -59,19 +65,25 @@ class FasterGraph(Graph):
     def remove_edge(self, edge):
         """Remove an edge from the graph."""
         if edge in self.edges():
-            del self._edges[edge._properties['name']]
-            self._nodes[edge._source._properties['name']]._outbound.remove(edge)
-            self._nodes[edge._target._properties['name']]._inbound.remove(edge)
+            self._nodes[edge.target.id]._inbound.remove(edge)
+            self._nodes[edge.source.id]._outbound.remove(edge)
+            del self._edges[edge.id]
         else:
             raise RuntimeError
 
 
 class FasterNode(Node):
 
-    def __init__(self, properties=None, **kwargs):
-        self._properties = properties
+    def __init__(self, id, properties=None, **kwargs):
+        if properties is None:
+            self._properties = {}
+            self._properties.update(kwargs)
+        else:
+            self._properties = properties.copy()
+            self._properties.update(kwargs)
         self._inbound = []
         self._outbound = []
+        self.id = id
 
     @property
     def properties(self):
@@ -88,16 +100,22 @@ class FasterNode(Node):
 
     def edges(self):
         """Make an iterable of all edges that start or end at the node."""
-        return chain(self._inbound.values(), self._outbound.values())
+        return chain(self._inbound, self._outbound)
 
 
 class FasterEdge(Edge):
     """Connection between two nodes."""
 
-    def __init__(self, source, target, properties=None):
+    def __init__(self,id, source, target, properties=None, **kwargs):
+        if properties is None:
+            self._properties = {}
+            self._properties.update(kwargs)
+        else:
+            self._properties = properties.copy()
+            self._properties.update(kwargs)
         self._source = source
         self._target = target
-        self._properties = properties
+        self.id = id
 
     @property
     def properties(self):
