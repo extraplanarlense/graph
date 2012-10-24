@@ -80,6 +80,13 @@ class AbstractGraphTest:
         self.assertIn(loop, self.a.inbound())
         self.assertIn(loop, self.a.outbound())
 
+    def test_remove_edge_loop(self):
+        loop = self.graph.add_edge(self.a, self.a)
+        self.graph.remove_edge(loop)
+        self.assertNotIn(loop, self.a.inbound())
+        self.assertNotIn(loop, self.a.outbound())
+        self.assertNotIn(loop, self.graph.edges())
+
     def test_add_edge_duplicate(self):
         dup = self.graph.add_edge(self.a, self.b)
         self.assertIsInstance(dup, Edge)
@@ -89,6 +96,16 @@ class AbstractGraphTest:
         self.assertIn(dup, self.b.inbound())
         self.assertIn(dup, self.a.outbound())
         self.assertNotEqual(dup, self.ab)
+
+    def test_remove_edge_duplicate(self):
+        dup = self.graph.add_edge(self.a, self.b)
+        self.graph.remove_edge(dup)
+        self.assertNotIn(dup, self.graph.edges())
+        self.assertNotIn(dup, self.a.outbound())
+        self.assertNotIn(dup, self.b.inbound())
+        self.assertIn(self.ab, self.graph.edges())
+        self.assertIn(self.ab, self.a.outbound())
+        self.assertIn(self.ab, self.b.inbound())
 
     def test_graph_properties_mapping(self):
         self.assertIsInstance(self.graph.properties, Mapping)
