@@ -1,11 +1,9 @@
 from . import Graph, Edge, Node
-import string
-import random
 import uuid
 from itertools import chain
 
-class FasterGraph(Graph):
 
+class FasterGraph(Graph):
 
     @property
     def properties(self):
@@ -106,7 +104,7 @@ class FasterNode(Node):
 class FasterEdge(Edge):
     """Connection between two nodes."""
 
-    def __init__(self,id, source, target, properties=None, **kwargs):
+    def __init__(self, id, source, target, properties=None, **kwargs):
         if properties is None:
             self._properties = {}
             self._properties.update(kwargs)
